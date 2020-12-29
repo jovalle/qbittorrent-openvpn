@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  namespace: qbittorrent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+      - name: qbittorrent
+        image: jovalle/qbittorrent-openvpn:latest
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: qbittorrent-config
+            optional: false
+        - secretRef:
+            name: vpn-credentials
+            optional: false
+        ports:
+        - containerPort: 8080
+        - containerPort: 8999
+        - containerPort: 8999
+          protocol: UDP
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+            - NET_ADMIN
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /downloads
+          name: downloads
+        - name: tunnel
+          mountPath: /dev/net/tun
+        - name: localtime
+          mountPath: /etc/localtime
+          readOnly: true
+        livenessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 5
+          tcpSocket:
+            port: 8999
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 5
+          tcpSocket:
+            port: 8999
+        resources:
+          request:
+            cpu: 100m
+            memory: 500Mi
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+      restartPolicy: Always
+      volumes:
+      - name: config
+        nfs:
+          path: /config/qbittorrent
+          server: nfs.example.com
+      - name: downloads
+        nfs:
+          path: /downloads
+          server: nfs.example.com
+      - hostPath:
+          path: /dev/net/tun
+          type: ""
+        name: tunnel
+      - hostPath:
+          path: /etc/localtime
+          type: ""
+        name: localtime
