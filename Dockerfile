@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM debian
+FROM debian
 LABEL maintainer="Jay Ovalle (jovalle) <jay.ovalle@gmail.com>"
 
 VOLUME /downloads
