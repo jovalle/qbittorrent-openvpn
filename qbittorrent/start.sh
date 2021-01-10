@@ -21,17 +21,17 @@ debug() {
 }
 
 # create base dir
-if [[ ! -e /config/qbittorrent ]]; then
-	mkdir -p /config/qbittorrent/config/
-	chown -R ${PUID}:${PGID} /config/qbittorrent
+if [[ ! -e /config/qBittorrent ]]; then
+	mkdir -p /config/qBittorrent/config/
+	chown -R ${PUID}:${PGID} /config/qBittorrent
 else
-	chown -R ${PUID}:${PGID} /config/qbittorrent
+	chown -R ${PUID}:${PGID} /config/qBittorrent
 fi
 
 # copy default qbittorrent config if missing
-if [[ ! -e /config/qbittorrent/config/qbittorrent.conf ]]; then
-	/bin/cp /etc/qbittorrent/qbittorrent.conf /config/qbittorrent/config/qbittorrent.conf
-	chmod 755 /config/qbittorrent/config/qbittorrent.conf
+if [[ ! -e /config/qBittorrent/config/qBittorrent.conf ]]; then
+	/bin/cp /etc/qbittorrent/qBittorrent.conf /config/qBittorrent/config/qBittorrent.conf
+	chmod 755 /config/qBittorrent/config/qBittorrent.conf
 fi
 
 # check for missing group
@@ -64,44 +64,44 @@ fi
 
 # set qbittorrent ports
 if [[ -n ${WEBUI_PORT} ]]; then
-	webui_port_exist=$(cat /config/qbittorrent/config/qbittorrent.conf | grep -m 1 'WebUI\\Port='${WEBUI_PORT})
+	webui_port_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'WebUI\\Port='${WEBUI_PORT})
 	if [[ -z ${webui_port_exist} ]]; then
-		webui_exist=$(cat /config/qbittorrent/config/qbittorrent.conf | grep -m 1 'WebUI\\Port')
+		webui_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'WebUI\\Port')
 		if [[ -n ${webui_exist} ]]; then
 			# get line number of webui port
-			LINE_NUM=$(grep -Fn -m 1 'WebUI\Port' /config/qbittorrent/config/qbittorrent.conf | cut -d: -f 1)
-			sed -i "${LINE_NUM}s@.*@WebUI\\Port=${WEBUI_PORT}@" /config/qbittorrent/config/qbittorrent.conf
+			LINE_NUM=$(grep -Fn -m 1 'WebUI\Port' /config/qBittorrent/config/qBittorrent.conf | cut -d: -f 1)
+			sed -i "${LINE_NUM}s@.*@WebUI\\Port=${WEBUI_PORT}@" /config/qBittorrent/config/qBittorrent.conf
 		else
-			echo "WebUI\Port=${WEBUI_PORT}" >> /config/qbittorrent/config/qbittorrent.conf
+			echo "WebUI\Port=${WEBUI_PORT}" >> /config/qBittorrent/config/qBittorrent.conf
 		fi
 	fi
 fi
 
 if [[ -n ${INCOMING_PORT} ]]; then
-	incoming_port_exist=$(cat /config/qbittorrent/config/qbittorrent.conf | grep -m 1 'Connection\\PortRangeMin='${INCOMING_PORT})
+	incoming_port_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'Connection\\PortRangeMin='${INCOMING_PORT})
 	if [[ -z ${incoming_port_exist} ]]; then
-		incoming_exist=$(cat /config/qbittorrent/config/qbittorrent.conf | grep -m 1 'Connection\\PortRangeMin')
+		incoming_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'Connection\\PortRangeMin')
 		if [[ -n ${incoming_exist} ]]; then
 			# get line number of Incoming
-			LINE_NUM=$(grep -Fn -m 1 'Connection\PortRangeMin' /config/qbittorrent/config/qbittorrent.conf | cut -d: -f 1)
-			sed -i "${LINE_NUM}s@.*@Connection\\PortRangeMin=${INCOMING_PORT}@" /config/qbittorrent/config/qbittorrent.conf
+			LINE_NUM=$(grep -Fn -m 1 'Connection\PortRangeMin' /config/qBittorrent/config/qBittorrent.conf | cut -d: -f 1)
+			sed -i "${LINE_NUM}s@.*@Connection\\PortRangeMin=${INCOMING_PORT}@" /config/qBittorrent/config/qBittorrent.conf
 		else
-			echo "Connection\PortRangeMin=${INCOMING_PORT}" >> /config/qbittorrent/config/qbittorrent.conf
+			echo "Connection\PortRangeMin=${INCOMING_PORT}" >> /config/qBittorrent/config/qBittorrent.conf
 		fi
 	fi
 fi
 
 info "Starting qBittorrent daemon..."
 /bin/bash /etc/qbittorrent/qbittorrent.init start &
-chmod -R 755 /config/qbittorrent
+chmod -R 755 /config/qBittorrent
 
 sleep 1
 qbpid=$(pgrep -o -x qbittorrent-nox)
 info "qBittorrent PID: ${qbpid}"
 
 if [[ -e /proc/${qbpid} ]]; then
-	if [[ -e /config/qbittorrent/data/logs/qbittorrent.log ]]; then
-		chmod 775 /config/qbittorrent/data/logs/qbittorrent.log
+	if [[ -e /config/qBittorrent/data/logs/qbittorrent.log ]]; then
+		chmod 775 /config/qBittorrent/data/logs/qbittorrent.log
 	fi
 	sleep infinity
 else

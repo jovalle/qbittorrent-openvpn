@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: qbittorrent
-        image: jovalle/qbittorrent-openvpn:latest
+        image: jovalle/qbittorrent-openvpn:v0.1.0
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
@@ -69,7 +69,7 @@ spec:
       volumes:
       - name: config
         nfs:
-          path: /config/qbittorrent
+          path: /config/qBittorrent
           server: nfs.example.com
       - name: downloads
         nfs:

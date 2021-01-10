@@ -58,7 +58,7 @@ do_start()
 	# Create log path if missing
 	if [[ ! -e ${QBTLOGPATH} ]]; then
 		mkdir -p ${QBTLOGPATH}
-		chown -R ${PUID}:${PGID} /config/qbittorrent
+		chown -R ${PUID}:${PGID} /config/qBittorrent
 	fi
 
 	# Create log file if missing

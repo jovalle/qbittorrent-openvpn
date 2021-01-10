@@ -1,5 +1,6 @@
 FROM debian
 LABEL maintainer="Jay Ovalle (jovalle) <jay.ovalle@gmail.com>"
+LABEL version="v0.1.0"
 
 VOLUME /downloads
 VOLUME /config
