@@ -16,7 +16,7 @@ $ docker run --privileged  -d \
 ```
 
 ## Run in Kubernetes
-See [manifests/](manifests/) for examples. There a few variables (e.g. KUBERNETES_ENABLED, POD_NETWORK) that must be set to allow for proper connectivity in a Kubernetes cluster. You should know your pod and service subnet CIDRs before proceeding.
+See [manifests/](manifests/) for examples. There are a few variables (e.g. KUBERNETES_ENABLED, POD_NETWORK) that must be set to allow for proper connectivity in a Kubernetes cluster. Reference the pod and service subnet CIDRs before proceeding.
 
 ## Variables, Volumes, and Ports
 
