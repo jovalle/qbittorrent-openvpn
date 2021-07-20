@@ -1,6 +1,6 @@
 FROM debian
 LABEL maintainer="Jay Ovalle (jovalle) <jay.ovalle@gmail.com>"
-LABEL version="v0.1.0"
+LABEL version="v0.1.1"
 
 VOLUME /downloads
 VOLUME /config
@@ -11,11 +11,26 @@ RUN usermod -u 99 nobody
 
 # Update packages and install software
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends apt-utils openssl software-properties-common \
+    && apt-get install -y --no-install-recommends \
+        apt-utils \
+        openssl \
+        software-properties-common \
     && apt-add-repository non-free \
     && apt-add-repository contrib \
     && apt-get update \
-    && apt-get install -y qbittorrent-nox openvpn curl moreutils net-tools dos2unix kmod iptables ipcalc unrar procps vim \
+    && apt-get install -y \
+        qbittorrent-nox \
+        openvpn \
+        curl \
+        moreutils \
+        net-tools \
+        dos2unix \
+        kmod \
+        iptables \
+        ipcalc \
+        unrar \
+        procps \
+        vim \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add configuration and scripts

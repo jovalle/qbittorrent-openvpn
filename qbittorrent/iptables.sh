@@ -12,7 +12,7 @@ debug() {
 	if [[ -z ${DEBUG} ]]; then
 		export DEBUG=no
 	fi
-	
+
 	if [[ ${DEBUG} == yes ]]; then
 		echo "[debug] $@"
 	fi
@@ -122,6 +122,9 @@ iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
+# accept output to DNS servers
+iptables -A OUTPUT -p udp -m udp --dport 53 -j ACCEPT
+
 # accept input to tunnel adapter (probably tun0)
 debug "Allowing input to ${VPN_DEVICE_TYPE}"
 iptables -A INPUT -i ${VPN_DEVICE_TYPE} -j ACCEPT
@@ -184,7 +187,7 @@ if [[ ${iptable_mangle_exit_code} == 0 ]]; then
 	debug "Allowing tcp output from qBittorrent web UI port (${WEBUI_PORT})"
 	iptables -t mangle -A OUTPUT -p tcp --dport ${WEBUI_PORT} -j MARK --set-mark 1
 	iptables -t mangle -A OUTPUT -p tcp --sport ${WEBUI_PORT} -j MARK --set-mark 1
-	
+
 fi
 
 # accept output from qbittorrent webui port - used for lan access
