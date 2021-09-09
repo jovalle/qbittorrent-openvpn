@@ -24,6 +24,7 @@ RUN apt-get update && \
         dos2unix \
         ipcalc \
         iptables \
+        iputils-ping \
         kmod \
         moreutils \
         net-tools \
