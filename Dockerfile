@@ -17,6 +17,7 @@ RUN apt-get update && \
         openssl \
         software-properties-common && \
     apt-add-repository 'deb https://deb.debian.org/debian stable main' && \
+    apt-add-repository 'deb https://deb.debian.org/debian stable non-free' && \
     apt update && \
     apt install -y \
         curl \
