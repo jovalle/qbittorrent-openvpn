@@ -18,7 +18,19 @@ RUN apt-get update && \
         software-properties-common && \
     apt-add-repository 'deb https://deb.debian.org/debian stable main' && \
     apt update && \
-    apt install -y qbittorrent-nox
+    apt install -y \
+        curl \
+        dos2unix \
+        ipcalc \
+        iptables \
+        kmod \
+        moreutils \
+        net-tools \
+        openvpn \
+        procps \
+        qbittorrent-nox \
+        unrar \
+        vim
 
 # Cleanup
 RUN apt-get clean && \
