@@ -51,21 +51,21 @@ if [[ ${VPN_ENABLED} == "yes" ]]; then
 	chmod -R 775 /config/openvpn &> /dev/null
 	exit_code_chmod=$?
 	set -e
-	
+
 	if [[ ${exit_code_chown} != 0 || ${exit_code_chmod} != 0 ]]; then
 		warn "Unable to chown/chmod /config/openvpn/, assuming SMB mountpoint"
 	fi
-	
+
 	# wildcard search for openvpn config files (match on first result)
 	export VPN_CONFIG=$(find /config/openvpn -maxdepth 1 -name "*.ovpn" -print -quit)
-	
+
 	# if ovpn file not found in /config/openvpn then exit
 	if [[ -z ${VPN_CONFIG} ]]; then
 		error "No OpenVPN config file located in /config/openvpn/ (ovpn extension), please download from your VPN provider and then restart this container, exiting..."
 	fi
-	
+
 	info "OpenVPN config file (ovpn extension) is located at ${VPN_CONFIG}"
-	
+
 	# read username and password env vars and put them in credentials.conf, then update ovpn config
 	if [[ -n ${VPN_USERNAME} ]] && [[ -n ${VPN_PASSWORD} ]]; then
 		if [[ ! -e /config/openvpn/credentials.conf ]]; then
@@ -89,11 +89,11 @@ if [[ ${VPN_ENABLED} == "yes" ]]; then
 	# set safe perms on openvpn credential file
 	chmod 600 /config/openvpn/credentials.conf
 	info "OpenVPN credentials file set to 644"
-	
+
 	# convert CRLF (windows) to LF (unix) for ovpn
 	/usr/bin/dos2unix ${VPN_CONFIG} 1> /dev/null
 	info "Converted CRLF to LF for ovpn"
-	
+
 	# parse values from ovpn file
 	export vpn_remote_line=$(cat ${VPN_CONFIG} | grep -P -o -m 1 '(?<=^remote\s)[^\n\r]+' | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 	if [[ -n ${vpn_remote_line} ]]; then
@@ -126,12 +126,12 @@ if [[ ${VPN_ENABLED} == "yes" ]]; then
 			export VPN_PROTOCOL="udp"
 		fi
 	fi
-	
+
 	# required for use in iptables
 	if [[ ${VPN_PROTOCOL} == tcp-client ]]; then
 		export VPN_PROTOCOL="tcp"
 	fi
-	
+
 	VPN_DEVICE_TYPE=$(cat ${VPN_CONFIG} | grep -P -o -m 1 '(?<=^dev\s)[^\r\n\d]+' | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 	if [[ -n ${VPN_DEVICE_TYPE} ]]; then
 		export VPN_DEVICE_TYPE=${VPN_DEVICE_TYPE}0
@@ -144,9 +144,12 @@ if [[ ${VPN_ENABLED} == "yes" ]]; then
 	export KUBERNETES_ENABLED=$(echo ${KUBERNETES_ENABLED} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 	if [[ -n ${KUBERNETES_ENABLED} ]]; then
 		info "KUBERNETES_ENABLED defined as '${KUBERNETES_ENABLED}'"
+    warn "Wiping /etc/resolv.conf to avoid nameserver conflict inheritance"
+    cat /dev/null > /etc/resolv.conf
 	else
 		warn "KUBERNETES_ENABLED not defined,(via -e KUBERNETES_ENABLED), defaulting to 'no'"
 		export KUBERNETES_ENABLED="no"
+		export DOCKER_NETWORK=172.17.0.0/16
 	fi
 	if [[ ${KUBERNETES_ENABLED} == yes ]]; then
 		export POD_NETWORK=$(echo ${POD_NETWORK} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')

@@ -131,7 +131,7 @@ iptables -A INPUT -i ${VPN_DEVICE_TYPE} -j ACCEPT
 
 # accept input to/from LANs (172.x range is internal dhcp)
 if [[ -z ${KUBERNETES_ENABLED} || ${KUBERNETES_ENABLED} == no ]]; then
-iptables -A INPUT -s "${docker_network_cidr}" -d "${docker_network_cidr}" -j ACCEPT
+	iptables -A INPUT -s "${DOCKER_NETWORK}" -d "${DOCKER_NETWORK}" -j ACCEPT
 fi
 
 # accept input to/from Kubernetes networks
@@ -162,7 +162,7 @@ iptables -A OUTPUT -o ${VPN_DEVICE_TYPE} -j ACCEPT
 
 # accept output to/from LANs (172.x range is internal dhcp)
 if [[ -z ${KUBERNETES_ENABLED} || ${KUBERNETES_ENABLED} == no ]]; then
-iptables -A OUTPUT -s "${docker_network_cidr}" -d "${docker_network_cidr}" -j ACCEPT
+	iptables -A OUTPUT -s "${DOCKER_NETWORK}" -d "${DOCKER_NETWORK}" -j ACCEPT
 fi
 
 # accept output to/from Kubernetes networks
