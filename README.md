@@ -7,35 +7,33 @@ $ docker run --privileged  -d \
     -v /your/config/path/:/config \
     -v /your/downloads/path/:/downloads \
     -e "VPN_ENABLED=yes" \
-    -e "LAN_NETWORK=192.168.1.0/24" \
+    -e "LAN_CIDR=192.168.1.0/24" \
     -e "NAME_SERVERS=8.8.8.8,8.8.4.4" \
     -p 8080:8080 \
-    -p 8999:8999 \
-    -p 8999:8999/udp \
+    -p 6881:6881 \
+    -p 6881:6881/udp \
     jovalle/qbittorrent-openvpn
 ```
 
 ## Run in Kubernetes
-See [manifests/](manifests/) for examples. There are a few variables (e.g. KUBERNETES_ENABLED, POD_NETWORK) that must be set to allow for proper connectivity in a Kubernetes cluster. Reference the pod and service subnet CIDRs before proceeding.
+See [manifests/](manifests/) for examples. There are a few variables (e.g. K8S_CLUSTER, K8S_POD_CIDR) that must be set to allow for proper connectivity in a Kubernetes cluster. Reference the pod and service subnet CIDRs before proceeding.
 
 ## Variables, Volumes, and Ports
 
 ### Environment Variables
 | Variable | Required | Function | Example |
 |----------|----------|----------|----------|
-|`VPN_ENABLED`| Yes | Enable VPN? (yes/no) Default:yes|`VPN_ENABLED=yes`|
-|`VPN_USERNAME`| No | If username and password provided, configures ovpn file automatically |`VPN_USERNAME=ad8f64c02a2de`|
-|`VPN_PASSWORD`| No | If username and password provided, configures ovpn file automatically |`VPN_PASSWORD=ac98df79ed7fb`|
-|`LAN_NETWORK`| Yes | Local Network with CIDR notation |`LAN_NETWORK=192.168.1.0/24`|
-|`KUBERNETES_ENABLED`| Yes* | Running in Kubernetes? (yes/no) Default:no|`KUBERNETES_ENABLED=yes`|
-|`POD_NETWORK`| Yes* | Kubernetes Pod Subnet with CIDR notation |`POD_NETWORK=10.244.0.0/16`|
-|`SVC_NETWORK`| Yes* | Kubernetes Service Subnet with CIDR notation |`SVC_NETWORK=10.96.0.0/16`|
+|`K8S_CLUSTER`| Yes* | Running in Kubernetes? (yes/no) Default:no|`K8S_CLUSTER=yes`|
+|`K8S_POD_CIDR`| Yes* | Kubernetes Pod Subnet with CIDR notation |`K8S_POD_CIDR=10.244.0.0/16`|
+|`K8S_SVC_CIDR`| Yes* | Kubernetes Service Subnet with CIDR notation |`K8S_SVC_CIDR=10.96.0.0/16`|
+|`LAN_CIDR`| Yes | Local Network with CIDR notation |`LAN_CIDR=192.168.1.0/24`|
 |`NAME_SERVERS`| No | Comma delimited name servers |`NAME_SERVERS=8.8.8.8,8.8.4.4`|
-|`PUID`| No | UID applied to config files and downloads |`PUID=99`|
 |`PGID`| No | GID applied to config files and downloads |`PGID=100`|
+|`PUID`| No | UID applied to config files and downloads |`PUID=99`|
 |`UMASK`| No | GID applied to config files and downloads |`UMASK=002`|
-|`WEBUI_PORT`| No | Applies WebUI port to qBittorrents config at boot (Must change exposed ports to match)  |`WEBUI_PORT=8080`|
-|`INCOMING_PORT`| No | Applies Incoming port to qBittorrents config at boot (Must change exposed ports to match) |`INCOMING_PORT=8999`|
+|`VPN_ENABLED`| Yes | Enable VPN? (yes/no) Default:yes|`VPN_ENABLED=yes`|
+|`VPN_PASSWORD`| No | If username and password provided, configures ovpn file automatically |`VPN_PASSWORD=ac98df79ed7fb`|
+|`VPN_USERNAME`| No | If username and password provided, configures ovpn file automatically |`VPN_USERNAME=ad8f64c02a2de`|
 
 \* required if deploying to a Kubernetes cluster
 
@@ -49,8 +47,8 @@ See [manifests/](manifests/) for examples. There are a few variables (e.g. KUBER
 | Port | Proto | Required | Function | Example |
 |----------|----------|----------|----------|----------|
 | `8080` | TCP | Yes | qBittorrent WebUI | `8080:8080`|
-| `8999` | TCP | Yes | qBittorrent listening port | `8999:8999`|
-| `8999` | UDP | Yes | qBittorrent listening port | `8999:8999/udp`|
+| `6881` | TCP | Yes | qBittorrent listening port | `6881:6881`|
+| `6881` | UDP | Yes | qBittorrent listening port | `6881:6881/udp`|
 
 ## Access the Web UI
 Access http://IPADDRESS:PORT from a browser on the same network.

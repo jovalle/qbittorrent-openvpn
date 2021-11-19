@@ -141,35 +141,35 @@ if [[ ${VPN_ENABLED} == "yes" ]]; then
 	fi
 
 	# get values from env vars as defined by user
-	export KUBERNETES_ENABLED=$(echo ${KUBERNETES_ENABLED} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-	if [[ -n ${KUBERNETES_ENABLED} ]]; then
-		info "KUBERNETES_ENABLED defined as '${KUBERNETES_ENABLED}'"
+	export K8S_CLUSTER=$(echo ${K8S_CLUSTER} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+	if [[ -n ${K8S_CLUSTER} ]]; then
+		info "K8S_CLUSTER defined as '${K8S_CLUSTER}'"
     warn "Wiping /etc/resolv.conf to avoid nameserver conflict inheritance"
     cat /dev/null > /etc/resolv.conf
 	else
-		warn "KUBERNETES_ENABLED not defined,(via -e KUBERNETES_ENABLED), defaulting to 'no'"
-		export KUBERNETES_ENABLED="no"
+		warn "K8S_CLUSTER not defined,(via -e K8S_CLUSTER), defaulting to 'no'"
+		export K8S_CLUSTER="no"
 		export DOCKER_NETWORK=172.17.0.0/16
 	fi
-	if [[ ${KUBERNETES_ENABLED} == yes ]]; then
-		export POD_NETWORK=$(echo ${POD_NETWORK} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-		if [[ -n ${POD_NETWORK} ]]; then
-			info "POD_NETWORK defined as '${POD_NETWORK}'"
+	if [[ ${K8S_CLUSTER} == yes ]]; then
+		export K8S_POD_CIDR=$(echo ${K8S_POD_CIDR} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+		if [[ -n ${K8S_POD_CIDR} ]]; then
+			info "K8S_POD_CIDR defined as '${K8S_POD_CIDR}'"
 		else
-			error "POD_NETWORK not defined (via -e POD_NETWORK), exiting..."
+			error "K8S_POD_CIDR not defined (via -e K8S_POD_CIDR), exiting..."
 		fi
-		export SVC_NETWORK=$(echo ${SVC_NETWORK} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-		if [[ -n ${SVC_NETWORK} ]]; then
-			info "SVC_NETWORK defined as '${SVC_NETWORK}'"
+		export K8S_SVC_CIDR=$(echo ${K8S_SVC_CIDR} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+		if [[ -n ${K8S_SVC_CIDR} ]]; then
+			info "K8S_SVC_CIDR defined as '${K8S_SVC_CIDR}'"
 		else
-			error "SVC_NETWORK not defined (via -e SVC_NETWORK), exiting..."
+			error "K8S_SVC_CIDR not defined (via -e K8S_SVC_CIDR), exiting..."
 		fi
 	fi
-	export LAN_NETWORK=$(echo ${LAN_NETWORK} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-	if [[ -n ${LAN_NETWORK} ]]; then
-		info "LAN_NETWORK defined as '${LAN_NETWORK}'"
+	export LAN_CIDR=$(echo ${LAN_CIDR} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+	if [[ -n ${LAN_CIDR} ]]; then
+		info "LAN_CIDR defined as '${LAN_CIDR}'"
 	else
-		error "LAN_NETWORK not defined (via -e LAN_NETWORK), exiting..."
+		error "LAN_CIDR not defined (via -e LAN_CIDR), exiting..."
 	fi
 	export NAME_SERVERS=$(echo ${NAME_SERVERS} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 	if [[ -n ${NAME_SERVERS} ]]; then

@@ -62,35 +62,6 @@ else
   info "umask defined as '${UMASK}'"
 fi
 
-# set qbittorrent ports
-if [[ -n ${WEBUI_PORT} ]]; then
-	webui_port_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'WebUI\\Port='${WEBUI_PORT})
-	if [[ -z ${webui_port_exist} ]]; then
-		webui_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'WebUI\\Port')
-		if [[ -n ${webui_exist} ]]; then
-			# get line number of webui port
-			LINE_NUM=$(grep -Fn -m 1 'WebUI\Port' /config/qBittorrent/config/qBittorrent.conf | cut -d: -f 1)
-			sed -i "${LINE_NUM}s@.*@WebUI\\Port=${WEBUI_PORT}@" /config/qBittorrent/config/qBittorrent.conf
-		else
-			echo "WebUI\Port=${WEBUI_PORT}" >> /config/qBittorrent/config/qBittorrent.conf
-		fi
-	fi
-fi
-
-if [[ -n ${INCOMING_PORT} ]]; then
-	incoming_port_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'Connection\\PortRangeMin='${INCOMING_PORT})
-	if [[ -z ${incoming_port_exist} ]]; then
-		incoming_exist=$(cat /config/qBittorrent/config/qBittorrent.conf | grep -m 1 'Connection\\PortRangeMin')
-		if [[ -n ${incoming_exist} ]]; then
-			# get line number of Incoming
-			LINE_NUM=$(grep -Fn -m 1 'Connection\PortRangeMin' /config/qBittorrent/config/qBittorrent.conf | cut -d: -f 1)
-			sed -i "${LINE_NUM}s@.*@Connection\\PortRangeMin=${INCOMING_PORT}@" /config/qBittorrent/config/qBittorrent.conf
-		else
-			echo "Connection\PortRangeMin=${INCOMING_PORT}" >> /config/qBittorrent/config/qBittorrent.conf
-		fi
-	fi
-fi
-
 info "Starting qBittorrent daemon..."
 /bin/bash /etc/qbittorrent/qbittorrent.init start &
 chmod -R 755 /config/qBittorrent
