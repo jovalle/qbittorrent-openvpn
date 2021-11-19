@@ -144,13 +144,17 @@ if [[ ${VPN_ENABLED} == "yes" ]]; then
 	export K8S_CLUSTER=$(echo ${K8S_CLUSTER} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 	if [[ -n ${K8S_CLUSTER} ]]; then
 		info "K8S_CLUSTER defined as '${K8S_CLUSTER}'"
-    warn "Wiping /etc/resolv.conf to avoid nameserver conflict inheritance"
-    cat /dev/null > /etc/resolv.conf
 	else
-		warn "K8S_CLUSTER not defined,(via -e K8S_CLUSTER), defaulting to 'no'"
+		warn "K8S_CLUSTER not defined (via -e K8S_CLUSTER), defaulting to 'no'"
 		export K8S_CLUSTER="no"
-		export DOCKER_NETWORK=172.17.0.0/16
 	fi
+
+	# set default docker network
+	if [[ -z ${DOCKER_CIDR} ]]; then
+		export DOCKER_CIDR=172.17.0.0/16
+		info "Setting default DOCKER_CIDR as ${DOCKER_CIDR}"
+	fi
+
 	if [[ ${K8S_CLUSTER} == yes ]]; then
 		export K8S_POD_CIDR=$(echo ${K8S_POD_CIDR} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 		if [[ -n ${K8S_POD_CIDR} ]]; then
@@ -198,9 +202,11 @@ for name_server_item in "${name_server_list[@]}"; do
 	# strip whitespace from start and end of lan_network_item
 	name_server_item=$(echo ${name_server_item} | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 
-	info "Adding ${name_server_item} to resolv.conf"
-	echo "nameserver ${name_server_item}" >> /etc/resolv.conf
-
+	info "Adding ${name_server_item} to top of /etc/resolv.conf"
+	cat /etc/resolv.conf > /tmp/resolv.conf.tmp
+	echo "nameserver ${name_server_item}" > /etc/resolv.conf
+	cat /tmp/resolv.conf.tmp >> /etc/resolv.conf
+	rm -f /tmp/resolv.conf.tmp
 done
 
 if [[ -z ${PUID} ]]; then

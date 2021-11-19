@@ -127,7 +127,7 @@ iptables -A INPUT -i ${VPN_DEVICE_TYPE} -j ACCEPT
 
 # accept input to/from LANs (172.x range is internal dhcp)
 if [[ -z ${K8S_CLUSTER} || ${K8S_CLUSTER} == no ]]; then
-	iptables -A INPUT -s "${DOCKER_NETWORK}" -d "${DOCKER_NETWORK}" -j ACCEPT
+	iptables -A INPUT -s "${DOCKER_CIDR}" -d "${DOCKER_CIDR}" -j ACCEPT
 fi
 
 # accept input to/from Kubernetes networks
@@ -158,7 +158,7 @@ iptables -A OUTPUT -o ${VPN_DEVICE_TYPE} -j ACCEPT
 
 # accept output to/from LANs (172.x range is internal dhcp)
 if [[ -z ${K8S_CLUSTER} || ${K8S_CLUSTER} == no ]]; then
-	iptables -A OUTPUT -s "${DOCKER_NETWORK}" -d "${DOCKER_NETWORK}" -j ACCEPT
+	iptables -A OUTPUT -s "${DOCKER_CIDR}" -d "${DOCKER_CIDR}" -j ACCEPT
 fi
 
 # accept output to/from Kubernetes networks

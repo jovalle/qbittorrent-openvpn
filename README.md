@@ -23,15 +23,16 @@ See [manifests/](manifests/) for examples. There are a few variables (e.g. K8S_C
 ### Environment Variables
 | Variable | Required | Function | Example |
 |----------|----------|----------|----------|
-|`K8S_CLUSTER`| Yes* | Running in Kubernetes? (yes/no) Default:no|`K8S_CLUSTER=yes`|
-|`K8S_POD_CIDR`| Yes* | Kubernetes Pod Subnet with CIDR notation |`K8S_POD_CIDR=10.244.0.0/16`|
-|`K8S_SVC_CIDR`| Yes* | Kubernetes Service Subnet with CIDR notation |`K8S_SVC_CIDR=10.96.0.0/16`|
-|`LAN_CIDR`| Yes | Local Network with CIDR notation |`LAN_CIDR=192.168.1.0/24`|
+|`DOCKER_CIDR`| No | Docker bridge network in CIDR notation. Default:172.17.0.0/16 |`DOCKER_CIDR=172.17.0.0/16`|
+|`K8S_CLUSTER`| Yes* | Running in Kubernetes? (yes/no) Default:no |`K8S_CLUSTER=yes`|
+|`K8S_POD_CIDR`| Yes* | Kubernetes Pod Subnet in CIDR notation |`K8S_POD_CIDR=10.244.0.0/16`|
+|`K8S_SVC_CIDR`| Yes* | Kubernetes Service Subnet in CIDR notation |`K8S_SVC_CIDR=10.96.0.0/16`|
+|`LAN_CIDR`| Yes | Local network in CIDR notation |`LAN_CIDR=192.168.1.0/24`|
 |`NAME_SERVERS`| No | Comma delimited name servers |`NAME_SERVERS=8.8.8.8,8.8.4.4`|
 |`PGID`| No | GID applied to config files and downloads |`PGID=100`|
 |`PUID`| No | UID applied to config files and downloads |`PUID=99`|
 |`UMASK`| No | GID applied to config files and downloads |`UMASK=002`|
-|`VPN_ENABLED`| Yes | Enable VPN? (yes/no) Default:yes|`VPN_ENABLED=yes`|
+|`VPN_ENABLED`| Yes | Enable VPN? (yes/no) Default:yes |`VPN_ENABLED=yes`|
 |`VPN_PASSWORD`| No | If username and password provided, configures ovpn file automatically |`VPN_PASSWORD=ac98df79ed7fb`|
 |`VPN_USERNAME`| No | If username and password provided, configures ovpn file automatically |`VPN_USERNAME=ad8f64c02a2de`|
 
